@@ -14,11 +14,9 @@ const GLOBALS = {
 
 export default {
   resolve: {
-    extensions: ['', '.js', '.jsx', '.json']
+    extensions: ['*', '.js', '.jsx', '.json']
   },
-  debug: true,
   devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
-  noInfo: true, // set to false to see a list of every file being bundled.
   entry: path.resolve(__dirname, 'src/index'),
   target: 'web', // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
   output: {
@@ -31,7 +29,7 @@ export default {
     new WebpackMd5Hash(),
 
     // Optimize the order that items are bundled. This assures the hash is deterministic.
-    new webpack.optimize.OccurenceOrderPlugin(),
+//    new webpack.optimize.OccurenceOrderPlugin(), // superseded in webpack 2
 
     // Tells React to build in prod mode. https://facebook.github.io/react/downloads.html
     new webpack.DefinePlugin(GLOBALS),
@@ -64,7 +62,21 @@ export default {
     new webpack.optimize.DedupePlugin(),
 
     // Minify JS
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false,
+      options: {
+        sassLoader: {
+          includePaths: [path.resolve(__dirname, 'src', 'scss')]
+        },
+        context: '/',
+        postcss: () => [autoprefixer],
+        noInfo: true, // set to false to see a list of every file being bundled.
+        debug: true
+      }
+    }),
   ],
   module: {
     loaders: [
@@ -78,6 +90,5 @@ export default {
       {test: /(\.css|\.scss)$/, loader: ExtractTextPlugin.extract('css?sourceMap!postcss!sass?sourceMap')},
       {test: /\.json$/, loader: "json"}
     ]
-  },
-  postcss: ()=> [autoprefixer]
+  }
 };
