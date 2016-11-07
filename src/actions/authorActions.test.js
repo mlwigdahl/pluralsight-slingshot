@@ -50,7 +50,28 @@ describe('Async Actions', () => {
 
         const expectedActions = [
             {type: types.BEGIN_AJAX_CALL},
-            {type: types.LOAD_AUTHORS_SUCCESS, body: {authors: [{id: 'matt-wigdahl', firstName: 'Matt', lastName: 'Wigdahl'}]}}
+            {
+                type: types.LOAD_AUTHORS_SUCCESS, 
+                body: {
+                    authors: [
+                        {
+                            id: 'cory-house',
+                            firstName: 'Cory',
+                            lastName: 'House'
+                        },
+                        {
+                            id: 'scott-allen',
+                            firstName: 'Scott',
+                            lastName: 'Allen'
+                        },
+                        {
+                            id: 'dan-wahlin',
+                            firstName: 'Dan',
+                            lastName: 'Wahlin'
+                        }
+                    ]
+                }
+            }
         ];
 
         expect(typeof (authorActions.loadAuthors())).to.equal('function');
@@ -60,6 +81,9 @@ describe('Async Actions', () => {
             expect(dispatch.firstCall).to.have.been.calledWith(expectedActions[0]);
             expect(dispatch.secondCall).to.have.been.calledWith(expectedActions[1]);
             done();
+        })
+        .catch(()=> { 
+            done(); 
         });
     });
 });
