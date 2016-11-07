@@ -5,7 +5,7 @@ import {AuthorsPage} from './AuthorsPage';
 import {Provider} from 'react-redux';
 
 function setup(numAuthors, prefix) {
-    let props = {authors: []};
+    let props = {actions: {}, authors: []};
 
     while(numAuthors > 0) {
         props.authors.push({

@@ -6,7 +6,7 @@ import {CoursesPage} from './CoursesPage';
 import {Provider} from 'react-redux';
 
 function setup(numCourses, prefix) {
-    let props = {courses: []};
+    let props = {actions: {}, courses: []};
 
     while(numCourses > 0) {
         props.courses.push({
