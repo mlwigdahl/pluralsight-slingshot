@@ -1,3 +1,16 @@
+# Note:
+
+This is a sample project based on my implementation of Cory House's demo app from the Pluralsight course on React/Redux:  https://github.com/mlwigdahl/ps-react-redux-mlw.  
+Once I completed that application, added testing, and ran through a good number of the additional functional challenges, I decided to port it to Cory House's Slingshot -- a React starter kit that uses some different elements in its stack.
+So this is that Pluralsight project, modified to work with Slingshot, and cleaned up (at least in development mode) as much as was feasible.
+
+Feel free to use this as a more extensive demo app or in conjunction with the repo linked above to illustrate the changes required in moving between Cory House's Pluralsight starter stack and the more full-featured Slingshot.
+
+Enjoy!
+
+
+# Original Slingshot Header Below...
+
 # React Slingshot!
 
 [![Build status: Linux](https://img.shields.io/travis/coryhouse/react-slingshot.svg?style=flat-square)](https://travis-ci.org/coryhouse/react-slingshot)
