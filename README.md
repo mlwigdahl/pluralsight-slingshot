@@ -1,6 +1,7 @@
 # Note:
 
 This is a sample project based on my implementation of Cory House's demo app from the Pluralsight course on React/Redux:  https://github.com/mlwigdahl/ps-react-redux-mlw.  
+
 Once I completed that application, added testing, and ran through a good number of the additional functional challenges, I decided to port it to Cory House's Slingshot -- a React starter kit that uses some different elements in its stack.
 So this is that Pluralsight project, modified to work with Slingshot, and cleaned up (at least in development mode) as much as was feasible.
 
