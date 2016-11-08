@@ -9,11 +9,9 @@ import path from 'path';
 
 export default {
   resolve: {
-    extensions: ['', '.js', '.jsx', '.json']
+    extensions: ['*', '.js', '.jsx', '.json']
   },
-  debug: true,
   devtool: 'eval-source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
-  noInfo: false, // set to false to see a list of every file being bundled.
   entry: [
     // must be first entry to properly set public path
     './src/webpack-public-path',
@@ -40,7 +38,19 @@ export default {
         collapseWhitespace: true
       },
       inject: true
-    })
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: false,
+      debug: true,
+      noInfo: false, // set to false to see a list of every file being bundled.
+      options: {
+        sassLoader: {
+          includePaths: [path.resolve(__dirname, 'src', 'scss')]
+        },
+        context: '/',
+        postcss: () => [autoprefixer],
+      }
+    }),
   ],
   module: {
     loaders: [
@@ -54,6 +64,5 @@ export default {
       {test: /(\.css|\.scss)$/, loaders: ['style', 'css?sourceMap', 'postcss', 'sass?sourceMap']},
       {test: /\.json$/, loader: "json"}
     ]
-  },
-  postcss: ()=> [autoprefixer]
+  }
 };

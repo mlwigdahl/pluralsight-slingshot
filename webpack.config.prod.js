@@ -67,14 +67,13 @@ export default {
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
+      noInfo: true, // set to false to see a list of every file being bundled.
       options: {
         sassLoader: {
           includePaths: [path.resolve(__dirname, 'src', 'scss')]
         },
         context: '/',
         postcss: () => [autoprefixer],
-        noInfo: true, // set to false to see a list of every file being bundled.
-        debug: true
       }
     }),
   ],
