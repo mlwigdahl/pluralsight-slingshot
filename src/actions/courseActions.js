@@ -35,7 +35,7 @@ export function loadCourses() {
 }
 
 export function saveCourse(course) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(beginAjaxCall());
         return CourseApi.saveCourse(course).then(savedCourse => {
             course.id ? dispatch(updateCourseSuccess(savedCourse)) :
@@ -48,7 +48,7 @@ export function saveCourse(course) {
 }
 
 export function deleteCourse(course) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         dispatch(beginAjaxCall());
         return CourseApi.deleteCourse(course).then(deletedCourse => {
             dispatch(deleteCourseSuccess(deletedCourse));
