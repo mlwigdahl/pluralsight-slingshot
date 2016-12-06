@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as authorActions from '../../actions/authorActions';
+import * as authorActions from '../../ducks/authorDuck';
 import AuthorForm from './AuthorForm'; 
 import toastr from 'toastr';
 import {authorIdFromData} from '../../selectors/selectors.js';

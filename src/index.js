@@ -11,8 +11,8 @@ import './styles/styles.scss'; // Yep, that's right. You can import SASS/CSS fil
 import { syncHistoryWithStore } from 'react-router-redux';
 
 /**/
-import {loadCourses} from './actions/courseActions';
-import {loadAuthors} from './actions/authorActions';
+import {loadCourses} from './ducks/courseDuck';
+import {loadAuthors} from './ducks/authorDuck';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/toastr/build/toastr.min.css';
 

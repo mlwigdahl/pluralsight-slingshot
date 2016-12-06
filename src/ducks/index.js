@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
-import courses from './courseReducer';
-import authors from './authorReducer';
-import ajaxCallsInProgress from './ajaxStatusReducer';
+import courses from './courseDuck';
+import authors from './authorDuck';
+import ajaxCallsInProgress from './ajaxDuck';
 import {routerReducer} from 'react-router-redux';
 
 const rootReducer = combineReducers({

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as courseActions from '../../actions/courseActions';
+import * as courseActions from '../../ducks/courseDuck';
 import CourseForm from './CourseForm'; 
 import toastr from 'toastr';
 import {authorsFormattedForDropdown} from '../../selectors/selectors';

@@ -1,9 +1,9 @@
 import {expect} from 'chai';
 import {createStore} from 'redux';
-import rootReducer from '../reducers';
-import initialState from '../reducers/initialState';
-import * as courseActions from '../actions/courseActions';
-import * as authorActions from '../actions/authorActions';
+import rootReducer from '../ducks';
+import initialState from '../ducks/initialState';
+import * as courseActions from '../ducks/courseDuck';
+import * as authorActions from '../ducks/authorDuck';
 
 describe('Store', function() {
     it('Should handle creating courses', function() {
