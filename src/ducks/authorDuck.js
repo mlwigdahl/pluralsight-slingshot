@@ -1,32 +1,34 @@
 import initialState from './initialState';
 import AuthorApi from '../api/mockAuthorApi';
-import {beginAjaxCall, ajaxCallError} from './ajaxDuck';
+import * as ajax from './ajaxDuck';
 
-export const LOAD_AUTHORS_SUCCESS = 'pluralsight-slingshot/author/LOAD_AUTHORS_SUCCESS';
-export const CREATE_AUTHOR_SUCCESS = 'pluralsight-slingshot/author/CREATE_AUTHOR_SUCCESS';
-export const UPDATE_AUTHOR_SUCCESS = 'pluralsight-slingshot/author/UPDATE_AUTHOR_SUCCESS';
-export const DELETE_AUTHOR_SUCCESS = 'pluralsight-slingshot/author/DELETE_AUTHOR_SUCCESS';
-export const AUTHOR_CHANGED = 'pluralsight-slingshot/author/AUTHOR_CHANGED';
+export const actions = {
+    LOAD_AUTHORS_SUCCESS: 'pluralsight-slingshot/author/LOAD_AUTHORS_SUCCESS',
+    CREATE_AUTHOR_SUCCESS: 'pluralsight-slingshot/author/CREATE_AUTHOR_SUCCESS',
+    UPDATE_AUTHOR_SUCCESS: 'pluralsight-slingshot/author/UPDATE_AUTHOR_SUCCESS',
+    DELETE_AUTHOR_SUCCESS: 'pluralsight-slingshot/author/DELETE_AUTHOR_SUCCESS',
+    AUTHOR_CHANGED: 'pluralsight-slingshot/author/AUTHOR_CHANGED'
+};
 
 // reducer
-export default function reducer(state = initialState.authors, action) {
+export function reducer(state = initialState.authors, action) {
     switch (action.type) {
-        case LOAD_AUTHORS_SUCCESS:
+        case actions.LOAD_AUTHORS_SUCCESS:
             return action.authors;
 
-        case CREATE_AUTHOR_SUCCESS:
+        case actions.CREATE_AUTHOR_SUCCESS:
             return [
                 ...state, 
                 {...action.author}
             ];
 
-        case UPDATE_AUTHOR_SUCCESS:
+        case actions.UPDATE_AUTHOR_SUCCESS:
             return [
                 ...state.filter(author => author.id !== action.author.id),
                 {...action.author}
             ];
 
-        case DELETE_AUTHOR_SUCCESS:
+        case actions.DELETE_AUTHOR_SUCCESS:
             return [
                 ...state.filter(author => author.id !== action.author.id)
             ];
@@ -39,59 +41,62 @@ export default function reducer(state = initialState.authors, action) {
 // sagas
 
 // action creators
-export function loadAuthorsSuccess(authors) {
-    return {type: LOAD_AUTHORS_SUCCESS, authors};
-}
 
-export function updateAuthorSuccess(author) {
-    return { type: UPDATE_AUTHOR_SUCCESS, author };
-}
+export const creators = {
+    loadAuthorsSuccess: (authors) => {
+        return {type: actions.LOAD_AUTHORS_SUCCESS, authors};
+    },
 
-export function createAuthorSuccess(author) {
-    return { type: CREATE_AUTHOR_SUCCESS, author };
-}
+    updateAuthorSuccess: (author) => {
+        return { type: actions.UPDATE_AUTHOR_SUCCESS, author };
+    },
 
-export function deleteAuthorSuccess(author) {
-    return { type: DELETE_AUTHOR_SUCCESS, author };
-}
+    createAuthorSuccess: (author) => {
+        return { type: actions.CREATE_AUTHOR_SUCCESS, author };
+    },
 
-export function authorChanged() {
-    return { type: AUTHOR_CHANGED };
-}
+    deleteAuthorSuccess: (author) => {
+        return { type: actions.DELETE_AUTHOR_SUCCESS, author };
+    },
 
-export function loadAuthors() {
-    return dispatch => {
-        dispatch(beginAjaxCall());
-        return AuthorApi.getAllAuthors().then(authors => {
-            dispatch(loadAuthorsSuccess(authors));
-        }).catch(error => {
-            dispatch(ajaxCallError(error));
-            throw(error);
-        });
-    };
-}
+    authorChanged: () => {
+        return { type: actions.AUTHOR_CHANGED };
+    },
 
-export function saveAuthor(author) {
-    return (dispatch, getState) => {
-        dispatch(beginAjaxCall());
-        return AuthorApi.saveAuthor(author).then(savedAuthor => {
-            author.id ? dispatch(updateAuthorSuccess(savedAuthor)) :
-                dispatch(createAuthorSuccess(savedAuthor));
-        }).catch(error => {
-            dispatch(ajaxCallError(error));
-            throw(error);
-        });
-    };
-}
+    loadAuthors: () => {
+        return dispatch => {
+            dispatch(ajax.creators.beginAjaxCall());
+            return AuthorApi.getAllAuthors().then(authors => {
+                dispatch(creators.loadAuthorsSuccess(authors));
+            }).catch(error => {
+                dispatch(ajax.creators.ajaxCallError(error));
+                throw(error);
+            });
+        };
+    },
 
-export function deleteAuthor(author) {
-    return (dispatch, getState) => {
-        dispatch(beginAjaxCall());
-        return AuthorApi.deleteAuthor(author).then(deletedAuthor => {
-            dispatch(deleteAuthorSuccess(deletedAuthor));
-        }).catch(error => {
-            dispatch(ajaxCallError(error));
-            throw(error);
-        });
-    };
-}
+    saveAuthor: (author) => {
+        return (dispatch, getState) => {
+            dispatch(ajax.creators.beginAjaxCall());
+            return AuthorApi.saveAuthor(author).then(savedAuthor => {
+                author.id ? dispatch(creators.updateAuthorSuccess(savedAuthor)) :
+                    dispatch(creators.createAuthorSuccess(savedAuthor));
+            }).catch(error => {
+                dispatch(ajax.creators.ajaxCallError(error));
+                throw(error);
+            });
+        };
+    },
+
+    deleteAuthor: (author) => {
+        return (dispatch, getState) => {
+            dispatch(ajax.creators.beginAjaxCall());
+            return AuthorApi.deleteAuthor(author).then(deletedAuthor => {
+                dispatch(creators.deleteAuthorSuccess(deletedAuthor));
+            }).catch(error => {
+                dispatch(ajax.creators.ajaxCallError(error));
+                throw(error);
+            });
+        };
+    }
+};

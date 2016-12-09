@@ -1,5 +1,5 @@
-import reducer, * as authorDuck from './authorDuck';
-import * as ajaxDuck from './ajaxDuck';
+import * as author from './authorDuck';
+import * as ajax from './ajaxDuck';
 
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -16,9 +16,9 @@ describe('Author Reducer', () => {
 
         const newAction = {firstName: 'C', lastName: 'X'};
 
-        const action = authorDuck.createAuthorSuccess(newAction);
+        const action = author.creators.createAuthorSuccess(newAction);
 
-        const newState = reducer(initialState, action);
+        const newState = author.reducer(initialState, action);
 
         expect(newState.length).to.equal(3);
         expect(newState[0].firstName).to.equal('A');
@@ -33,11 +33,11 @@ describe('Author Reducer', () => {
             {id: 'c-x', firstName: 'C', lastName: 'X'}
         ];
 
-        const author = {id: 'b-y', firstName: 'D', lastName: 'Y'};
-        const action = authorDuck.updateAuthorSuccess(author);
+        const authorData = {id: 'b-y', firstName: 'D', lastName: 'Y'};
+        const action = author.creators.updateAuthorSuccess(authorData);
 
-        const newState = reducer(initialState, action);
-        const updatedAuthor = newState.find(auth => auth.id == author.id);
+        const newState = author.reducer(initialState, action);
+        const updatedAuthor = newState.find(auth => auth.id == authorData.id);
         const untouchedAuthor = newState.find(auth => auth.id == 'a-z');
 
         expect(newState.length).to.equal(3);
@@ -52,11 +52,11 @@ describe('Author Reducer', () => {
             {id: 'c-x', firstName: 'C', lastName: 'X'}
         ];
 
-        const author = {id: 'b-y', firstName: 'B', lastName: 'Y'};
-        const action = authorDuck.deleteAuthorSuccess(author);
+        const authorData = {id: 'b-y', firstName: 'B', lastName: 'Y'};
+        const action = author.creators.deleteAuthorSuccess(authorData);
 
-        const newState = reducer(initialState, action);
-        const undefinedIfNotDeleted = newState.find(auth => auth.id == author.id);
+        const newState = author.reducer(initialState, action);
+        const undefinedIfNotDeleted = newState.find(auth => auth.id == authorData.id);
 
         expect(newState.length).to.equal(2);
         expect(undefinedIfNotDeleted).to.equal(undefined);
@@ -71,13 +71,13 @@ describe('Author Actions', () => {
     describe('createAuthorSuccess', () => {
         it('should create a CREATE_AUTHOR_SUCCESS action', () => {
             //arrange
-            const author = {id: 'matt-wigdahl', firstName: 'Matt', lastName: 'Wigdahl'};
+            const authorData = {id: 'matt-wigdahl', firstName: 'Matt', lastName: 'Wigdahl'};
             const expectedAction = {
-                type: authorDuck.CREATE_AUTHOR_SUCCESS,
-                author: author
+                type: author.actions.CREATE_AUTHOR_SUCCESS,
+                author: authorData
             };
 
-            const action = authorDuck.createAuthorSuccess(author);
+            const action = author.creators.createAuthorSuccess(authorData);
 
             expect(action).to.deep.equal(expectedAction);
         });
@@ -86,13 +86,13 @@ describe('Author Actions', () => {
     describe('deleteAuthorSuccess', () => {
         it('should create DELETE_AUTHOR_SUCCESS action', () => {
             //arrange
-            const author = {id: 'cory-house', firstName: 'Cory', lastName: 'House'};
+            const authorData = {id: 'cory-house', firstName: 'Cory', lastName: 'House'};
             const expectedAction = {
-                type: authorDuck.DELETE_AUTHOR_SUCCESS,
-                author: author
+                type: author.actions.DELETE_AUTHOR_SUCCESS,
+                author: authorData
             };
 
-            const action = authorDuck.deleteAuthorSuccess(author);
+            const action = author.creators.deleteAuthorSuccess(authorData);
 
             expect(action).to.deep.equal(expectedAction);
         });
@@ -109,9 +109,9 @@ describe('Async Actions', () => {
         const dispatch = sinon.spy();
 
         const expectedActions = [
-            {type: ajaxDuck.BEGIN_AJAX_CALL},
+            {type: ajax.actions.BEGIN_AJAX_CALL},
             {
-                type: authorDuck.LOAD_AUTHORS_SUCCESS, 
+                type: author.actions.LOAD_AUTHORS_SUCCESS, 
                 body: {
                     authors: [
                         {
@@ -134,9 +134,9 @@ describe('Async Actions', () => {
             }
         ];
 
-        expect(typeof (authorDuck.loadAuthors())).to.equal('function');
+        expect(typeof (author.creators.loadAuthors())).to.equal('function');
 
-        (authorDuck.loadAuthors())(dispatch).then(() => {
+        (author.creators.loadAuthors())(dispatch).then(() => {
             expect(dispatch.callCount).to.equal(2);
             expect(dispatch.firstCall).to.have.been.calledWith(expectedActions[0]);
             expect(dispatch.secondCall).to.have.been.calledWith(expectedActions[1]);

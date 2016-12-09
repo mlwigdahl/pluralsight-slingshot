@@ -1,5 +1,5 @@
-import reducer, * as courseDuck from './courseDuck';
-import * as ajaxDuck from './ajaxDuck';
+import * as course from './courseDuck';
+import * as ajax from './ajaxDuck';
 
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -16,9 +16,9 @@ describe('Course Reducer', () => {
 
         const newCourse = {title: 'C'};
 
-        const action = courseDuck.createCourseSuccess(newCourse);
+        const action = course.creators.createCourseSuccess(newCourse);
 
-        const newState = reducer(initialState, action);
+        const newState = course.reducer(initialState, action);
 
         expect(newState.length).to.equal(3);
         expect(newState[0].title).to.equal('A');
@@ -33,11 +33,11 @@ describe('Course Reducer', () => {
             {id: 'c', title: 'C'}
         ];
 
-        const course = {id: 'b', title: 'New Title'};
-        const action = courseDuck.updateCourseSuccess(course);
+        const courseData = {id: 'b', title: 'New Title'};
+        const action = course.creators.updateCourseSuccess(courseData);
 
-        const newState = reducer(initialState, action);
-        const updatedCourse = newState.find(crs => crs.id == course.id);
+        const newState = course.reducer(initialState, action);
+        const updatedCourse = newState.find(crs => crs.id == courseData.id);
         const untouchedCourse = newState.find(crs => crs.id == 'a');
 
         expect(newState.length).to.equal(3);
@@ -52,11 +52,11 @@ describe('Course Reducer', () => {
             {id: 'c', title: 'C'}
         ];
 
-        const course = {id: 'a', title: 'A'};
-        const action = courseDuck.deleteCourseSuccess(course);
+        const courseData = {id: 'a', title: 'A'};
+        const action = course.creators.deleteCourseSuccess(courseData);
 
-        const newState = reducer(initialState, action);
-        const undefinedIfNotDeleted = newState.find(crs => crs.id == course.id);
+        const newState = course.reducer(initialState, action);
+        const undefinedIfNotDeleted = newState.find(crs => crs.id == courseData.id);
 
         expect(newState.length).to.equal(2);
         expect(undefinedIfNotDeleted).to.equal(undefined);
@@ -71,13 +71,13 @@ describe('Course Actions', () => {
     describe('createCourseSuccess', () => {
         it('should create a CREATE_COURSE_SUCCESS action', () => {
             //arrange
-            const course = {id: 'clean-code', title: 'Clean Code'};
+            const courseData = {id: 'clean-code', title: 'Clean Code'};
             const expectedAction = {
-                type: courseDuck.CREATE_COURSE_SUCCESS,
-                course: course
+                type: course.actions.CREATE_COURSE_SUCCESS,
+                course: courseData
             };
 
-            const action = courseDuck.createCourseSuccess(course);
+            const action = course.creators.createCourseSuccess(courseData);
 
             expect(action).to.deep.equal(expectedAction);
         });
@@ -86,13 +86,13 @@ describe('Course Actions', () => {
     describe('deleteCourseSuccess', () => {
         it('should create DELETE_COURSE_SUCCESS action', () => {
             //arrange
-            const course = {id: 'clean-code', title: 'Clean Code'};
+            const courseData = {id: 'clean-code', title: 'Clean Code'};
             const expectedAction = {
-                type: courseDuck.DELETE_COURSE_SUCCESS,
-                course: course
+                type: course.actions.DELETE_COURSE_SUCCESS,
+                course: courseData
             };
 
-            const action = courseDuck.deleteCourseSuccess(course);
+            const action = course.creators.deleteCourseSuccess(courseData);
 
             expect(action).to.deep.equal(expectedAction);
         });
@@ -109,9 +109,9 @@ describe('Async Actions', () => {
         const dispatch = sinon.spy();
 
         const expectedActions = [
-            {type: ajaxDuck.BEGIN_AJAX_CALL},
+            {type: ajax.actions.BEGIN_AJAX_CALL},
             {
-                type: courseDuck.LOAD_COURSES_SUCCESS, 
+                type: course.actions.LOAD_COURSES_SUCCESS, 
                 body: {
                     courses: [
                         {
@@ -159,9 +159,9 @@ describe('Async Actions', () => {
             }
         ];
 
-        expect(typeof (courseDuck.loadCourses())).to.equal('function');
+        expect(typeof (course.creators.loadCourses())).to.equal('function');
 
-        (courseDuck.loadCourses())(dispatch).then(() => {
+        (course.creators.loadCourses())(dispatch).then(() => {
             expect(dispatch.callCount).to.equal(2);
             expect(dispatch.firstCall).to.have.been.calledWith(expectedActions[0]);
             expect(dispatch.secondCall).to.have.been.calledWith(expectedActions[1]);

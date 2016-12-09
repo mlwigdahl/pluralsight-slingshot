@@ -11,14 +11,14 @@ import './styles/styles.scss'; // Yep, that's right. You can import SASS/CSS fil
 import { syncHistoryWithStore } from 'react-router-redux';
 
 /**/
-import {loadCourses} from './ducks/courseDuck';
-import {loadAuthors} from './ducks/authorDuck';
+import * as course from './ducks/courseDuck';
+import * as author from './ducks/authorDuck';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/toastr/build/toastr.min.css';
 
 const store = configureStore();
-store.dispatch(loadCourses());
-store.dispatch(loadAuthors());
+store.dispatch(course.creators.loadCourses());
+store.dispatch(author.creators.loadAuthors());
 
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store);

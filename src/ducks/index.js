@@ -1,14 +1,14 @@
 import {combineReducers} from 'redux';
-import courses from './courseDuck';
-import authors from './authorDuck';
-import ajaxCallsInProgress from './ajaxDuck';
+import * as course from './courseDuck';
+import * as author from './authorDuck';
+import * as ajax from './ajaxDuck';
 import {routerReducer} from 'react-router-redux';
 
-const rootReducer = combineReducers({
-    courses,
-    authors,
-    ajaxCallsInProgress,
+const reducer = combineReducers({
+    courses: course.reducer,
+    authors: author.reducer,
+    ajaxCallsInProgress: ajax.reducer,
     routing: routerReducer
 });
 
-export default rootReducer;
+export default { reducer };
