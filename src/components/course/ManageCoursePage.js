@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as courseActions from '../../ducks/courseDuck';
+import * as course from '../../ducks/courseDuck';
 import CourseForm from './CourseForm'; 
 import toastr from 'toastr';
 import {authorsFormattedForDropdown} from '../../selectors/selectors';
@@ -42,9 +42,9 @@ export class ManageCoursePage extends React.Component {
 
     updateCourseState(event) {
         const field = event.target.name;
-        let course = this.state.course;
-        course[field] = event.target.value;
-        return this.setState({course: course, dirty: true});
+        let courseData = this.state.course;
+        courseData[field] = event.target.value;
+        return this.setState({course: courseData, dirty: true});
     }
 
     lengthIsValid(length) {
@@ -166,23 +166,23 @@ ManageCoursePage.contextTypes = {
 };
 
 function getCourseById(courses, id) {
-    const course = courses.filter(course => course.id == id);
+    const courseData = courses.filter(crs => crs.id == id);
 
-    if (course.length) return course[0]; // filter returns an array -- grab the first one
+    if (courseData.length) return courseData[0]; // filter returns an array -- grab the first one
     return null;
 }
 
 function mapStateToProps(state, ownProps) {
     const courseId = ownProps.params.id; // from the path '/course/:id'
 
-    let course = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
+    let courseData = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
 
     if (courseId && state.courses.length > 0) {
-        course = getCourseById(state.courses, courseId);
+        courseData = getCourseById(state.courses, courseId);
     }
 
     return {
-        course: course,
+        course: courseData,
         authors: authorsFormattedForDropdown(state.authors),
         courses: [...state.courses]
     };
@@ -190,7 +190,11 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(courseActions, dispatch)
+        actions: bindActionCreators([
+            course.creators.loadCourses,
+            course.creators.saveCourse,
+            course.creators.deleteCourse
+        ], dispatch)
     };
 }
 

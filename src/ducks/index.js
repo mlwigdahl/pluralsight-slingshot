@@ -11,4 +11,15 @@ const reducer = combineReducers({
     routing: routerReducer
 });
 
-export default { reducer };
+const saga = function* () {
+    yield [
+        author.sagas.watchers.LOAD_AUTHORS_REQUEST(),
+        author.sagas.watchers.SAVE_AUTHOR_REQUEST(),
+        author.sagas.watchers.DELETE_AUTHOR_REQUEST(),
+        course.sagas.watchers.LOAD_COURSES_REQUEST(),
+        course.sagas.watchers.SAVE_COURSE_REQUEST(),
+        course.sagas.watchers.DELETE_COURSE_REQUEST(),
+    ];
+};
+
+export default { reducer, saga };

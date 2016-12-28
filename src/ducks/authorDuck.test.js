@@ -1,9 +1,10 @@
 import * as author from './authorDuck';
 import * as ajax from './ajaxDuck';
+import AuthorApi from '../api/mockAuthorApi';
 
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
-import chai, { expect } from 'chai';
+import { expect } from 'chai';
+
+import { put, call } from 'redux-saga/effects';
 
 // reducer tests
 
@@ -65,8 +66,6 @@ describe('Author Reducer', () => {
 
 // action tests
 
-chai.use(sinonChai);
-
 describe('Author Actions', () => {
     describe('createAuthorSuccess', () => {
         it('should create a CREATE_AUTHOR_SUCCESS action', () => {
@@ -100,51 +99,36 @@ describe('Author Actions', () => {
 });
 
 describe('Async Actions', () => {
-    it('should create BEGIN_AJAX_CALL and LOAD_AUTHORS_SUCCESS when loading authors', (done) => {
-        // Here's an example call to nock.
-        // nock('http://example.com/')
-        //   .get('/courses')
-        //   .reply(200, {body: {course [{id: 1, firstName: 'Cory', lastName: 'House'}] }});
-
-        const dispatch = sinon.spy();
-
-        const expectedActions = [
-            {type: ajax.actions.BEGIN_AJAX_CALL},
+    it('should create BEGIN_AJAX_CALL and LOAD_AUTHORS_SUCCESS when loading authors', () => {
+        const expected = [
             {
-                type: author.actions.LOAD_AUTHORS_SUCCESS, 
-                body: {
-                    authors: [
-                        {
-                            id: 'cory-house',
-                            firstName: 'Cory',
-                            lastName: 'House'
-                        },
-                        {
-                            id: 'scott-allen',
-                            firstName: 'Scott',
-                            lastName: 'Allen'
-                        },
-                        {
-                            id: 'dan-wahlin',
-                            firstName: 'Dan',
-                            lastName: 'Wahlin'
-                        }
-                    ]
-                }
+                id: 'cory-house',
+                firstName: 'Cory',
+                lastName: 'House'
+            },
+            {
+                id: 'scott-allen',
+                firstName: 'Scott',
+                lastName: 'Allen'
+            },
+            {
+                id: 'dan-wahlin',
+                firstName: 'Dan',
+                lastName: 'Wahlin'
             }
         ];
 
-        expect(typeof (author.creators.loadAuthors())).to.equal('function');
+        expect(typeof (author.creators.loadAuthors())).to.equal('object');
 
-        (author.creators.loadAuthors())(dispatch).then(() => {
-            expect(dispatch.callCount).to.equal(2);
-            expect(dispatch.firstCall).to.have.been.calledWith(expectedActions[0]);
-            expect(dispatch.secondCall).to.have.been.calledWith(expectedActions[1]);
-            done();
+        let gen = author.sagas.workers.loadAuthors();
+        expect(gen.next().value).to.deep.equal(put(ajax.creators.beginAjaxCall()));
+        expect(gen.next().value).to.deep.equal(call(AuthorApi.getAllAuthors));
+
+        return AuthorApi.getAllAuthors().then( (sub) => {
+            expect(sub).to.deep.equal(expected);
+            expect(gen.next(sub).value).to.deep.equal(put(author.creators.loadAuthorsSuccess(expected)));
         })
-        .catch(() => { 
-            done(); 
-        });
+        .catch( e => { expect(true).to.equal(false); } );
     });
 });
 
