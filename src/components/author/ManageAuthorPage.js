@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as authorActions from '../../actions/authorActions';
+import * as author from '../../ducks/authorDuck';
 import AuthorForm from './AuthorForm'; 
 import toastr from 'toastr';
 import {authorIdFromData} from '../../selectors/selectors.js';
@@ -41,9 +41,9 @@ export class ManageAuthorPage extends React.Component {
 
     updateAuthorState(event) {
         const field = event.target.name;
-        let author = this.state.author;
-        author[field] = event.target.value;
-        return this.setState({author: author, dirty: true});
+        let authorData = this.state.author;
+        authorData[field] = event.target.value;
+        return this.setState({author: authorData, dirty: true});
     }
 
     authorFormIsValid(mode) {
@@ -164,23 +164,23 @@ ManageAuthorPage.contextTypes = {
 };
 
 function getAuthorById(authors, id) {
-    const author = authors.filter(author => author.id == id);
+    const authorData = authors.filter(auth => auth.id == id);
 
-    if (author.length) return author[0]; // filter returns an array -- grab the first one
+    if (authorData.length) return authorData[0]; // filter returns an array -- grab the first one
     return null;
 }
 
 function mapStateToProps(state, ownProps) {
     const authorId = ownProps.params.id; // from the path '/course/:id'
 
-    let author = {id: '', watchHref: '', firstName: '', lastName: ''};
+    let authorData = {id: '', watchHref: '', firstName: '', lastName: ''};
 
     if (authorId && state.authors.length > 0) {
-        author = getAuthorById(state.authors, authorId);
+        authorData = getAuthorById(state.authors, authorId);
     }
 
     return {
-        author: author,
+        author: authorData,
         authors: [...state.authors],
         courses: [...state.courses]
     };
@@ -188,7 +188,11 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(authorActions, dispatch)
+        actions: bindActionCreators([
+            author.creators.loadAuthors, 
+            author.creators.saveAuthor, 
+            author.creators.deleteAuthor
+        ], dispatch)
     };
 }
 

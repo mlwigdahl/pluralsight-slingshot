@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as authorActions from '../../actions/authorActions';
+import * as authorActions from '../../ducks/authorDuck';
 import AuthorList from './AuthorList';
 import {browserHistory} from 'react-router';
 
